@@ -14,7 +14,12 @@ const CORKAGE_STYLE = {
   "조건부":{ color:"#6a4a00", bg:"#fff5e0", border:"#d4a030" },
 };
 const CUISINES = ["한식","일식","중식","양식","이탈리안","고깃집","해산물","퓨전","와인바","이자카야","기타"];
-const PRICE_LEVELS = ["₩","₩₩","₩₩₩","₩₩₩₩"];
+const PRICE_LEVELS = ["3만원 이하","3~5만원","5만원 이상"];
+const PRICE_STYLE = {
+  "3만원 이하": { color:"#2e6e3a", bg:"#eaf5ec", border:"#6abf7a" },
+  "3~5만원":   { color:"#0a4888", bg:"#e6f0ff", border:"#6699dd" },
+  "5만원 이상": { color:"#8a4200", bg:"#fff2e0", border:"#d4a030" },
+};
 const AMBIANCE_OPTS = ["조용함","비즈니스","프라이빗룸","뷰 맛집","트렌디","전통적","캐주얼","바·하이볼","단체석","주차 편리","야외 테라스"];
 
 const RANK_STYLE = {
@@ -187,7 +192,7 @@ export default function App() {
 
   const K = { ink:"#12100e",paper:"#f6f2eb",card:"#fff",muted:"#8a7e6e",accent:"#b82800",gold:"#b87a00",night:"#1a1e3a",border:"#ddd4c4" };
   const FF = "Pretendard,'Apple SD Gothic Neo','Noto Sans KR',sans-serif";
-  const priceColor={"₩":"#2e6e3a","₩₩":"#0a4888","₩₩₩":"#8a4200","₩₩₩₩":"#5a1010"};
+  const priceColor={"3만원 이하":"#2e6e3a","3~5만원":"#0a4888","5만원 이상":"#8a4200"};
 
   const chip=(active,ac=K.night)=>({padding:"5px 11px",borderRadius:"20px",fontSize:"12px",fontWeight:600,border:active?`1.5px solid ${ac}`:`1px solid #c0b8a8`,background:active?ac:"#fff",color:active?"#f0ece4":K.muted,cursor:"pointer",whiteSpace:"nowrap",fontFamily:"inherit",transition:"all .12s"});
   const mChip=(on)=>({padding:"5px 11px",borderRadius:"20px",fontSize:"12px",fontWeight:600,border:on?`1.5px solid ${K.gold}`:`1.5px solid #d0c8b8`,background:on?K.night:"#fff",color:on?K.gold:K.muted,cursor:"pointer",fontFamily:"inherit"});
@@ -321,10 +326,19 @@ export default function App() {
           </div>
           <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:"8px"}}>
             <div><label style={fLabel}>음식 종류</label><select style={{...fInput,marginBottom:0}} value={form.cuisine} onChange={e=>setForm({...form,cuisine:e.target.value})}><option value="">선택</option>{CUISINES.map(c=><option key={c}>{c}</option>)}</select></div>
-            <div><label style={fLabel}>가격대</label><select style={{...fInput,marginBottom:0}} value={form.price} onChange={e=>setForm({...form,price:e.target.value})}>{PRICE_LEVELS.map(p=><option key={p}>{p}</option>)}</select></div>
-          </div>
-        </div>
-        <div style={sec}>
+            <div><label style={{...fLabel,marginTop:"10px"}}>가격대 (인당)</label>
+<div style={{display:"flex",gap:"6px",marginBottom:"4px"}}>
+  {PRICE_LEVELS.map(p=>(
+    <button key={p} onClick={()=>setForm({...form,price:p})}
+      style={{flex:1,padding:"9px 4px",borderRadius:"8px",fontSize:"12px",fontWeight:700,
+        fontFamily:"inherit",cursor:"pointer",transition:"all .12s",
+        border:form.price===p?`2px solid ${PRICE_STYLE[p].color}`:`1px solid #d0c8b8`,
+        background:form.price===p?PRICE_STYLE[p].bg:"#fff",
+        color:form.price===p?PRICE_STYLE[p].color:K.muted}}>
+      {p}
+    </button>
+  ))}
+</div>
           <label style={fLabel}>식사 시간</label>
           <div style={{display:"flex",gap:"8px",marginBottom:"14px"}}>{MEAL_TIMES.map(m=>(<button key={m} style={mealBtn(m,form.mealTimes?.includes(m))} onClick={()=>toggleArr("mealTimes",m)}><span style={{fontSize:"16px"}}>{MEAL_STYLE[m].icon}</span> {m}</button>))}</div>
           {isDinner&&<div style={{background:"#fdf8ee",borderRadius:"10px",padding:"12px",border:`1px dashed ${K.gold}50`,marginBottom:"14px"}}>
