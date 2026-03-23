@@ -157,7 +157,7 @@ export default function App() {
 
   const openAdd = (existing=null) => {
     setForm(existing?{...existing}:{
-      name:"",region:fRegion!=="전체"?fRegion:"",cuisine:"",price:"₩₩₩",
+      name:"",region:fRegion!=="전체"?fRegion:"",cuisine:"",price:"3~5만원",
       ranks:[],sizes:[],genders:[],mealTimes:[],alcohols:[],ambiance:[],
       naverUrl:"",rating:4,reservationRequired:false,reservationTip:"",corkage:"",
       notes:"",favorite:false,visitCount:0,lastVisit:new Date().toISOString().split("T")[0],visitLogs:[],
@@ -231,7 +231,7 @@ export default function App() {
           <button onClick={()=>setView("list")} style={{background:"none",border:"none",color:K.accent,cursor:"pointer",fontSize:"22px",padding:0,lineHeight:1,fontFamily:"inherit"}}>←</button>
           <div style={{flex:1}}>
             <div style={{fontSize:"18px",fontWeight:800,letterSpacing:"-.02em"}}>{r.name}</div>
-            <div style={{fontSize:"11px",color:K.accent}}>{r.region} · {r.cuisine} · <span style={{color:priceColor[r.price]||K.gold}}>{r.price}</span></div>
+            <div style={{fontSize:"11px",color:K.accent}}>{r.region} · {r.cuisine} · <span style={{color:priceColor[r.price]||K.gold,fontWeight:700}}>{r.price}</span></div>
           </div>
           <button onClick={()=>toggleFav(r.id)} style={{background:"none",border:"none",cursor:"pointer",fontSize:"20px",color:r.favorite?"#e02020":"#555",padding:0}}>♥</button>
         </div>
@@ -326,19 +326,24 @@ export default function App() {
           </div>
           <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:"8px"}}>
             <div><label style={fLabel}>음식 종류</label><select style={{...fInput,marginBottom:0}} value={form.cuisine} onChange={e=>setForm({...form,cuisine:e.target.value})}><option value="">선택</option>{CUISINES.map(c=><option key={c}>{c}</option>)}</select></div>
-            <div><label style={{...fLabel,marginTop:"10px"}}>가격대 (인당)</label>
-<div style={{display:"flex",gap:"6px",marginBottom:"4px"}}>
-  {PRICE_LEVELS.map(p=>(
-    <button key={p} onClick={()=>setForm({...form,price:p})}
-      style={{flex:1,padding:"9px 4px",borderRadius:"8px",fontSize:"12px",fontWeight:700,
-        fontFamily:"inherit",cursor:"pointer",transition:"all .12s",
-        border:form.price===p?`2px solid ${PRICE_STYLE[p].color}`:`1px solid #d0c8b8`,
-        background:form.price===p?PRICE_STYLE[p].bg:"#fff",
-        color:form.price===p?PRICE_STYLE[p].color:K.muted}}>
-      {p}
-    </button>
-  ))}
-</div>
+            <div>
+              <label style={fLabel}>가격대 (인당)</label>
+              <div style={{display:"flex",gap:"5px"}}>
+                {PRICE_LEVELS.map(p=>(
+                  <button key={p} onClick={()=>setForm({...form,price:p})}
+                    style={{flex:1,padding:"8px 2px",borderRadius:"8px",fontSize:"11px",fontWeight:700,
+                      fontFamily:"inherit",cursor:"pointer",transition:"all .12s",textAlign:"center",
+                      border:form.price===p?`2px solid ${PRICE_STYLE[p].color}`:`1px solid #d0c8b8`,
+                      background:form.price===p?PRICE_STYLE[p].bg:"#fff",
+                      color:form.price===p?PRICE_STYLE[p].color:K.muted}}>
+                    {p}
+                  </button>
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
+        <div style={sec}>
           <label style={fLabel}>식사 시간</label>
           <div style={{display:"flex",gap:"8px",marginBottom:"14px"}}>{MEAL_TIMES.map(m=>(<button key={m} style={mealBtn(m,form.mealTimes?.includes(m))} onClick={()=>toggleArr("mealTimes",m)}><span style={{fontSize:"16px"}}>{MEAL_STYLE[m].icon}</span> {m}</button>))}</div>
           {isDinner&&<div style={{background:"#fdf8ee",borderRadius:"10px",padding:"12px",border:`1px dashed ${K.gold}50`,marginBottom:"14px"}}>
