@@ -547,7 +547,101 @@ export default function App() {
           </div>
         ))}
       </div>
-      <Toast/>
+     </div>
+const totalVisits = restaurants.reduce((a,r)=>a+(r.visitCount||0),0);
+  return(
+    <div style={{fontFamily:FF,background:K.paper,minHeight:"100vh",color:K.ink,maxWidth:"500px",margin:"0 auto"}}>
+      <div style={{background:K.night,borderBottom:`3px solid ${K.accent}`}}>
+        <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",padding:"15px 16px 12px"}}>
+          <div style={{cursor:"pointer"}} onClick={()=>{setView("list");setSelected(null);setForm(null);setFRegion("전체");setFRank("");setFSize("");setFGender("");setFMeal("");setFAlcohol("");setFSearch("");setShowFavOnly(false);}}>
+            <div style={{fontSize:"22px",fontWeight:800,color:"#eeeae2",letterSpacing:"-.02em",fontFamily:FF}}>NHN PR 다이닝</div>
+            <div style={{fontSize:"10px",color:K.accent,letterSpacing:".16em",textTransform:"uppercase",marginTop:"3px"}}>NHN PR Dining Planner</div>
+          </div>
+        </div>
+      </div>
+      <div style={{display:"flex",background:"#fff",borderBottom:`1px solid ${K.border}`}}>
+        {[[restaurants.length,"등록"],[totalVisits,"방문"],[restaurants.filter(r=>r.favorite).length,"즐겨찾기"],[new Set(restaurants.map(r=>r.region)).size,"지역"]].map(([n,l],i)=>(
+          <div key={l} style={{flex:1,textAlign:"center",padding:"10px 4px",borderRight:i<3?`1px solid ${K.border}`:undefined}}>
+            <div style={{fontSize:"20px",fontWeight:700,lineHeight:1}}>{n}</div>
+            <div style={{fontSize:"10px",color:K.muted,marginTop:"2px",letterSpacing:".06em"}}>{l}</div>
+          </div>
+        ))}
+      </div>
+      <div style={{background:"#ede9e0",borderBottom:`1px solid ${K.border}`,padding:"12px 14px"}}>
+        <input value={fSearch} onChange={e=>setFSearch(e.target.value)} placeholder="🔍  이름, 메모, 음식 종류 검색..." style={{width:"100%",padding:"9px 12px",border:`1.5px solid ${K.border}`,borderRadius:"8px",background:"#fff",fontSize:"14px",fontFamily:"inherit",outline:"none",color:K.ink,boxSizing:"border-box",marginBottom:"10px"}}/>
+        <div style={{marginBottom:"10px"}}>
+          <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:"8px"}}>
+            <div style={{display:"flex",gap:"6px"}}>
+              <button onClick={()=>setFRegion("전체")} style={{padding:"5px 12px",borderRadius:"20px",fontSize:"12px",fontWeight:700,cursor:"pointer",fontFamily:"inherit",border:fRegion==="전체"?`2px solid ${K.accent}`:`1px solid #c0b8a8`,background:fRegion==="전체"?K.accent:"#fff",color:fRegion==="전체"?"#fff":K.muted}}>전체</button>
+              {Object.keys(REGION_GROUPS).map(g=>{const isActive=regionList.filter(r=>REGION_GROUPS[g].includes(r)).some(r=>r===fRegion);return(<button key={g} style={{padding:"5px 12px",borderRadius:"20px",fontSize:"12px",fontWeight:700,cursor:"default",fontFamily:"inherit",border:isActive?`2px solid ${K.night}`:`1px solid #c0b8a8`,background:isActive?K.night:"#f0ece4",color:isActive?K.gold:K.muted}}>{g}</button>);})}
+            </div>
+            <div style={{display:"flex",gap:"6px",alignItems:"center"}}>
+              {(fRank||fSize||fGender||fMeal||fAlcohol||showFavOnly)&&(<button onClick={()=>{setFRank("");setFSize("");setFGender("");setFMeal("");setFAlcohol("");setShowFavOnly(false);}} style={{fontSize:"11px",color:K.accent,background:"none",border:"none",cursor:"pointer",fontFamily:"inherit",fontWeight:700}}>초기화</button>)}
+              <button onClick={()=>setShowFavOnly(!showFavOnly)} style={{background:showFavOnly?K.accent:"none",color:showFavOnly?"#fff":K.muted,border:`1.5px solid ${showFavOnly?K.accent:"#c0b8a8"}`,borderRadius:"20px",padding:"3px 9px",fontSize:"11px",cursor:"pointer",fontFamily:"inherit",fontWeight:600}}>♥</button>
+            </div>
+          </div>
+          {Object.entries(REGION_GROUPS).map(([groupName,groupRegions])=>{const groupInList=regionList.filter(r=>groupRegions.includes(r));const isExpanded=expandedGroups[groupName];const visible=isExpanded?groupInList:groupInList.slice(0,3);const hasMore=groupInList.length>3;return(<div key={groupName} style={{marginBottom:"8px"}}><div style={{display:"flex",alignItems:"center",gap:"6px",flexWrap:"wrap"}}><span style={{fontSize:"10px",fontWeight:800,color:K.gold,letterSpacing:".08em",minWidth:"52px"}}>{groupName}</span>{visible.map(r=>{const cnt=restaurants.filter(x=>x.region===r).length;return(<button key={r} style={regionChip(fRegion===r)} onClick={()=>setFRegion(r)}>{r}{cnt>0?` (${cnt})`:""}</button>);})}{hasMore&&(<button onClick={()=>setExpandedGroups(prev=>({...prev,[groupName]:!prev[groupName]}))} style={{padding:"5px 10px",borderRadius:"6px",fontSize:"11px",fontWeight:700,cursor:"pointer",fontFamily:"inherit",border:`1px dashed #c0b8a8`,background:"#fff",color:K.muted}}>{isExpanded?"접기":`+${groupInList.length-3}더보기`}</button>)}</div></div>);})}
+          {(()=>{const allGrouped=Object.values(REGION_GROUPS).flat();const others=regionList.filter(r=>!allGrouped.includes(r));if(others.length===0) return null;const isExpanded=expandedGroups["기타"];const visible=isExpanded?others:others.slice(0,3);return(<div style={{marginBottom:"8px"}}><div style={{display:"flex",alignItems:"center",gap:"6px",flexWrap:"wrap"}}><span style={{fontSize:"10px",fontWeight:800,color:K.gold,letterSpacing:".08em",minWidth:"52px"}}>기타</span>{visible.map(r=>{const cnt=restaurants.filter(x=>x.region===r).length;return(<button key={r} style={regionChip(fRegion===r)} onClick={()=>setFRegion(r)}>{r}{cnt>0?` (${cnt})`:""}</button>);})}{others.length>3&&(<button onClick={()=>setExpandedGroups(prev=>({...prev,"기타":!prev["기타"]}))} style={{padding:"5px 10px",borderRadius:"6px",fontSize:"11px",fontWeight:700,cursor:"pointer",fontFamily:"inherit",border:`1px dashed #c0b8a8`,background:"#fff",color:K.muted}}>{isExpanded?"접기":`+${others.length-3}더보기`}</button>)}</div></div>);})()}
+        </div>
+        <div style={{marginBottom:"10px"}}>
+          <div style={{fontSize:"10px",color:K.muted,letterSpacing:".1em",textTransform:"uppercase",fontWeight:600,marginBottom:"6px"}}>식사 시간</div>
+          <div style={{display:"flex",gap:"8px",alignItems:"center"}}>
+            {MEAL_TIMES.map(m=>(<button key={m} style={{...mealBtn(m,fMeal===m),flex:"0 0 auto",padding:"8px 20px"}} onClick={()=>{setFMeal(fMeal===m?"":m);if(fMeal===m)setFAlcohol("");}}><span style={{fontSize:"14px"}}>{MEAL_STYLE[m].icon}</span> {m}</button>))}
+            {(fMeal||fAlcohol)&&<button onClick={()=>{setFMeal("");setFAlcohol("");}} style={{padding:"7px 12px",borderRadius:"8px",border:`1px solid ${K.border}`,background:"#fff",color:K.muted,cursor:"pointer",fontFamily:"inherit",fontSize:"12px",fontWeight:600}}>✕ 해제</button>}
+          </div>
+        </div>
+        {fMeal==="석식"&&<div style={{background:"#fdf8ee",borderRadius:"10px",padding:"10px 12px",border:`1px dashed ${K.gold}60`,marginBottom:"10px"}}><div style={{fontSize:"10px",color:K.gold,letterSpacing:".1em",textTransform:"uppercase",fontWeight:700,marginBottom:"6px"}}>🍾 주류 종류</div><div style={row}>{ALCOHOL_OPTS.map(a=>(<button key={a} style={alcChip(a,fAlcohol===a)} onClick={()=>setFAlcohol(fAlcohol===a?"":a)}>{a}</button>))}</div></div>}
+        <div style={{marginBottom:"9px"}}>
+          <div style={{fontSize:"10px",color:K.muted,letterSpacing:".1em",textTransform:"uppercase",fontWeight:600,marginBottom:"5px"}}>미팅 상대</div>
+          <div style={row}>{RANKS.map(r=>(<button key={r} style={chip(fRank===r,RANK_STYLE[r]?.dot||K.night)} onClick={()=>setFRank(fRank===r?"":r)}>{RANK_STYLE[r]?.label||r}</button>))}</div>
+        </div>
+        <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:"8px"}}>
+          <div><div style={{fontSize:"10px",color:K.muted,letterSpacing:".1em",textTransform:"uppercase",fontWeight:600,marginBottom:"5px"}}>미팅 규모</div><div style={row}>{SIZES.map(sz=>(<button key={sz} style={chip(fSize===sz)} onClick={()=>setFSize(fSize===sz?"":sz)}>{sz}</button>))}</div></div>
+          <div><div style={{fontSize:"10px",color:K.muted,letterSpacing:".1em",textTransform:"uppercase",fontWeight:600,marginBottom:"5px"}}>성별 구성</div><div style={row}>{GENDERS.map(g=>(<button key={g} style={chip(fGender===g)} onClick={()=>setFGender(fGender===g?"":g)}>{g}</button>))}</div></div>
+        </div>
+      </div>
+      <div style={{padding:"8px 14px 2px",fontSize:"12px",color:K.muted,display:"flex",justifyContent:"space-between",alignItems:"center"}}>
+        <span>{filtered.length!==restaurants.length?<><strong style={{color:K.ink}}>{filtered.length}곳</strong> 검색됨</>:`전체 ${restaurants.length}곳`}</span>
+        {(fMeal||fAlcohol)&&<span style={{fontSize:"11px",fontWeight:700,color:fMeal?MEAL_STYLE[fMeal].color:K.muted}}>{fMeal&&`${MEAL_STYLE[fMeal].icon} ${fMeal}`}{fAlcohol&&` · ${fAlcohol}`}</span>}
+      </div>
+      <div style={{paddingBottom:"80px"}}>
+        {filtered.length===0?<div style={{textAlign:"center",padding:"56px 20px",color:K.muted}}><div style={{fontSize:"36px",marginBottom:"10px"}}>🍽</div><div style={{fontSize:"15px",fontWeight:700,marginBottom:"6px"}}>조건에 맞는 음식점이 없습니다</div><div style={{fontSize:"13px",marginBottom:"16px"}}>필터를 변경하거나 새 음식점을 추가해 보세요</div></div>
+        :filtered.map(r=>(
+          <div key={r.id} onClick={()=>{setSelected(r);setView("detail");setShowAllLogs(false);}} onMouseOver={e=>{e.currentTarget.style.transform="translateY(-2px)";e.currentTarget.style.boxShadow="0 5px 16px rgba(0,0,0,.10)";}} onMouseOut={e=>{e.currentTarget.style.transform="none";e.currentTarget.style.boxShadow="0 2px 6px rgba(0,0,0,.06)";}} style={{background:K.card,margin:"10px 12px",borderRadius:"12px",overflow:"hidden",border:`1px solid ${K.border}`,boxShadow:"0 2px 6px rgba(0,0,0,.06)",cursor:"pointer",transition:"transform .15s, box-shadow .15s"}}>
+            <div style={{padding:"13px 13px 7px",display:"flex",justifyContent:"space-between",alignItems:"flex-start"}}>
+              <div style={{flex:1,minWidth:0}}>
+                <div style={{fontSize:"16px",fontWeight:800,marginBottom:"3px",lineHeight:1.2,letterSpacing:"-.01em"}}>{r.name}</div>
+                <div style={{fontSize:"12px",color:K.muted,display:"flex",gap:"6px",alignItems:"center",flexWrap:"wrap"}}>
+                  <span>{r.region}</span><span>·</span><span>{r.cuisine}</span><span>·</span>
+                  <span style={{color:priceColor[r.price]||K.gold,fontWeight:700}}>{r.price}</span>
+                  {r.reservationRequired&&<span style={{background:"#5a1010",color:"#fff",fontSize:"10px",fontWeight:600,padding:"1px 6px",borderRadius:"20px"}}>예약필수</span>}
+                </div>
+              </div>
+              <button onClick={e=>{e.stopPropagation();toggleFav(r.id);}} style={{background:"none",border:"none",cursor:"pointer",fontSize:"19px",color:r.favorite?"#d02020":"#ccc",padding:0,lineHeight:1}}>♥</button>
+            </div>
+            <div style={{padding:"0 13px 7px",display:"flex",gap:"4px",flexWrap:"wrap"}}>
+              {r.mealTimes?.map(m=>(<span key={m} style={{background:MEAL_STYLE[m].bg,color:MEAL_STYLE[m].color,fontSize:"11px",fontWeight:700,padding:"2px 8px",borderRadius:"20px",border:`1px solid ${MEAL_STYLE[m].border}`}}>{MEAL_STYLE[m].icon} {m}</span>))}
+              {r.alcohols?.map(a=>(<span key={a} style={{background:ALCOHOL_STYLE[a]?.bg||"#eee",color:ALCOHOL_STYLE[a]?.color||"#444",fontSize:"11px",fontWeight:600,padding:"2px 8px",borderRadius:"20px",border:`1px solid ${ALCOHOL_STYLE[a]?.border||"#ccc"}`}}>{a}</span>))}
+              {r.corkage&&<span style={{background:CORKAGE_STYLE[r.corkage]?.bg,color:CORKAGE_STYLE[r.corkage]?.color,fontSize:"11px",fontWeight:700,padding:"2px 8px",borderRadius:"20px",border:`1px solid ${CORKAGE_STYLE[r.corkage]?.border}`}}>🍾 {r.corkage==="가능"?"콜키지 ✓":r.corkage==="불가"?"콜키지 ✗":"콜키지 △"}</span>}
+            </div>
+            <div style={{padding:"0 13px 10px",display:"flex",gap:"4px",flexWrap:"wrap"}}>
+              {r.ranks?.map(rk=>(<Tag key={rk} label={RANK_STYLE[rk]?.label||rk} bg={RANK_STYLE[rk]?.bg||"#eee"} color={RANK_STYLE[rk]?.dot||"#444"} border={RANK_STYLE[rk]?.dot+"40"} small/>))}
+              {r.sizes?.map(sz=><Tag key={sz} label={sz} small/>)}
+              {r.ambiance?.slice(0,3).map(a=><Tag key={a} label={a} bg="#ede9e0" color="#6a5e4e" small/>)}
+            </div>
+            {r.visitLogs?.length>0&&r.visitLogs[0].comment&&<div style={{padding:"0 13px 8px"}}><div style={{fontSize:"12px",color:K.muted,background:"#faf7f2",padding:"6px 10px",borderRadius:"7px",lineHeight:1.5,borderLeft:`2px solid ${K.gold}`,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}><span style={{fontSize:"11px",color:K.gold,fontWeight:700,marginRight:"5px"}}>{r.visitLogs[0].date}</span>{r.visitLogs[0].comment}</div></div>}
+            <div style={{padding:"7px 13px",background:"#faf7f2",borderTop:`1px solid ${K.border}`,display:"flex",justifyContent:"space-between",alignItems:"center"}}>
+              <Stars value={r.rating}/>
+              <div style={{display:"flex",alignItems:"center",gap:"8px"}}>
+                <span style={{fontSize:"11px",color:K.muted}}>방문 {r.visitCount||0}회 · {r.lastVisit||"—"}</span>
+                {r.naverUrl&&<a href={r.naverUrl} target="_blank" rel="noopener noreferrer" onClick={e=>e.stopPropagation()} style={{display:"inline-flex",alignItems:"center",gap:"4px",background:"#03C75A",color:"#fff",fontSize:"11px",fontWeight:700,padding:"4px 9px",borderRadius:"6px",textDecoration:"none",whiteSpace:"nowrap"}}><svg width="11" height="11" viewBox="0 0 24 24" fill="none"><path d="M13.6 10.4L10.2 5H5v14h5.4l3.4-5.5V19H19V5h-5.4v5.4z" fill="white"/></svg>N</a>}
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+      <button onClick={()=>openAdd()} style={{position:"fixed",bottom:"24px",right:"calc(50% - 234px)",background:K.accent,color:"#fff",border:"none",borderRadius:"50px",padding:"13px 22px",fontWeight:800,cursor:"pointer",fontSize:"14px",fontFamily:"inherit",boxShadow:"0 4px 16px rgba(184,40,0,.35)",zIndex:100,letterSpacing:".04em"}}>+ 음식점 추가</button>
+      <div style={{position:"fixed",bottom:"20px",left:"50%",transform:"translateX(-50%)",background:toastType==="err"?"#6a1010":"#1a3a20",color:"#fff",padding:"9px 22px",borderRadius:"20px",fontSize:"13px",fontWeight:600,opacity:toast?1:0,transition:"opacity .3s",pointerEvents:"none",zIndex:999,whiteSpace:"nowrap"}}>{toast}</div>
     </div>
   );
 }
