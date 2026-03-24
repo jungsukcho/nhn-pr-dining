@@ -398,10 +398,8 @@ export default function App() {
       <div style={{background:K.night,borderBottom:`3px solid ${K.accent}`}}>
         <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",padding:"15px 16px 12px"}}>
           <div>
-            <div onClick={()=>{setView("list");setSelected(null);setForm(null);setFRegion("전체");setFRank("");setFSize("");setFGender("");setFMeal("");setFAlcohol("");setFSearch("");setShowFavOnly(false);}
-  style={{fontSize:"22px",fontWeight:800,color:"#eeeae2",letterSpacing:"-.02em",fontFamily:FF,cursor:"pointer"}}>NHN PR 다이닝</div>
-<div onClick={()=>{setView("list");setSelected(null);setForm(null);setFRegion("전체");setFRank("");setFSize("");setFGender("");setFMeal("");setFAlcohol("");setFSearch("");setShowFavOnly(false);}}
-  style={{fontSize:"10px",color:K.accent,letterSpacing:".16em",textTransform:"uppercase",marginTop:"3px",cursor:"pointer"}}>NHN PR Dining Planner</div>
+            <div onClick={()=>{setView("list");setSelected(null);setForm(null);setFRegion("전체");setFRank("");setFSize("");setFGender("");setFMeal("");setFAlcohol("");setFSearch("");setShowFavOnly(false);}style={{fontSize:"22px",fontWeight:800,color:"#eeeae2",letterSpacing:"-.02em",fontFamily:FF,cursor:"pointer"}}>NHN PR 다이닝</div>
+<div onClick={()=>{setView("list");setSelected(null);setForm(null);setFRegion("전체");setFRank("");setFSize("");setFGender("");setFMeal("");setFAlcohol("");setFSearch("");setShowFavOnly(false);}}style={{fontSize:"10px",color:K.accent,letterSpacing:".16em",textTransform:"uppercase",marginTop:"3px",cursor:"pointer"}}>NHN PR Dining Planner</div>
           </div>
           <button onClick={()=>openAdd()} style={{background:K.accent,color:"#fff",border:"none",borderRadius:"7px",padding:"9px 14px",fontWeight:700,cursor:"pointer",fontSize:"13px",fontFamily:"inherit"}}>+ 추가</button>
         </div>
