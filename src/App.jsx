@@ -397,7 +397,7 @@ export default function App() {
     <div style={{fontFamily:FF,background:K.paper,minHeight:"100vh",color:K.ink,maxWidth:"500px",margin:"0 auto"}}>
       <div style={{background:K.night,borderBottom:`3px solid ${K.accent}`}}>
         <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",padding:"15px 16px 12px"}}>
-          <div>
+          <div style={{cursor:"pointer"}} onClick={()=>{setView("list");setSelected(null);setForm(null);setFRegion("전체");setFRank("");setFSize("");setFGender("");setFMeal("");setFAlcohol("");setFSearch("");setShowFavOnly(false);}}>
             <div onClick={()=>{setView("list");setSelected(null);setForm(null);setFRegion("전체");setFRank("");setFSize("");setFGender("");setFMeal("");setFAlcohol("");setFSearch("");setShowFavOnly(false);}style={{fontSize:"22px",fontWeight:800,color:"#eeeae2",letterSpacing:"-.02em",fontFamily:FF,cursor:"pointer"}}>NHN PR 다이닝</div>
 <div onClick={()=>{setView("list");setSelected(null);setForm(null);setFRegion("전체");setFRank("");setFSize("");setFGender("");setFMeal("");setFAlcohol("");setFSearch("");setShowFavOnly(false);}}style={{fontSize:"10px",color:K.accent,letterSpacing:".16em",textTransform:"uppercase",marginTop:"3px",cursor:"pointer"}}>NHN PR Dining Planner</div>
           </div>
