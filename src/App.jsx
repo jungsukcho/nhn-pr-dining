@@ -25,7 +25,9 @@ const PRICE_STYLE = {
   "3~5만원":   { color:"#0a4888", bg:"#e6f0ff", border:"#6699dd" },
   "5만원 이상": { color:"#8a4200", bg:"#fff2e0", border:"#d4a030" },
 };
-const AMBIANCE_OPTS = ["조용함","비즈니스","프라이빗룸","뷰 맛집","트렌디","전통적","캐주얼","바·하이볼","단체석","주차 편리","야외 테라스"];
+const MOOD_OPTS = ["대화가 중요한 미팅","조용한 룸 식당","캐주얼한 점심 미팅용","격식있는 술자리","편안한 가성비 술자리"];
+const FACILITY_OPTS = ["프라이빗룸","단체석","주차 편리","야외 테라스"];
+
 const RANK_STYLE = {
   "임원급 (국장/부국장)": { label:"임원급",   dot:"#6a22a0", bg:"#f4eefb" },
   "데스크급 (50대+)":     { label:"데스크",   dot:"#b04a00", bg:"#fff2e6" },
@@ -357,8 +359,14 @@ export default function App() {
           <div style={row}>{GENDERS.map(g=>(<button key={g} style={mChip(form.genders?.includes(g))} onClick={()=>toggleArr("genders",g)}>{g}</button>))}</div>
         </div>
         <div style={sec}>
-          <label style={fLabel}>분위기 / 시설</label>
-          <div style={{...row,marginBottom:"12px"}}>{AMBIANCE_OPTS.map(a=>(<button key={a} style={mChip(form.ambiance?.includes(a))} onClick={()=>toggleArr("ambiance",a)}>{a}</button>))}</div>
+          <label style={fLabel}>미팅 분위기</label>
+          <div style={{...row,marginBottom:"14px"}}>
+            {MOOD_OPTS.map(a=>(<button key={a} style={mChip(form.ambiance?.includes(a))} onClick={()=>toggleArr("ambiance",a)}>{a}</button>))}
+          </div>
+          <label style={fLabel}>시설</label>
+          <div style={{...row,marginBottom:"14px"}}>
+            {FACILITY_OPTS.map(a=>(<button key={a} style={mChip(form.ambiance?.includes(a))} onClick={()=>toggleArr("ambiance",a)}>{a}</button>))}
+          </div>
           <label style={fLabel}>별점</label>
           <div style={{marginBottom:"12px"}}><Stars value={form.rating} onChange={v=>setForm({...form,rating:v})}/></div>
           <label style={{display:"flex",alignItems:"center",gap:"8px",fontSize:"13px",color:"#5a4e3a",cursor:"pointer",marginBottom:"8px"}}>
