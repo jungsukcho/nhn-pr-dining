@@ -456,51 +456,23 @@ export default function App() {
             </div>
           </div>
           <div style={{...row,marginBottom:"6px"}}>
-            <button style={regionChip(fRegion==="전체")} onClick={()=>setFRegion("전체")}>전체 ({restaurants.length})</button>
+           {/* 지역 */}
+        <div style={{marginBottom:"10px"}}>
+          <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:"8px"}}>
+            <div style={{display:"flex",gap:"6px"}}>
+              <button onClick={()=>setFRegion("전체")} style={{padding:"5px 12px",borderRadius:"20px",fontSize:"12px",fontWeight:700,cursor:"pointer",fontFamily:"inherit",border:fRegion==="전체"?`2px solid ${K.accent}`:`1px solid #c0b8a8`,background:fRegion==="전체"?K.accent:"#fff",color:fRegion==="전체"?"#fff":K.muted}}>전체</button>
+              {Object.keys(REGION_GROUPS).map(g=>{const isActive=regionList.filter(r=>REGION_GROUPS[g].includes(r)).some(r=>r===fRegion);return(<button key={g} style={{padding:"5px 12px",borderRadius:"20px",fontSize:"12px",fontWeight:700,cursor:"default",fontFamily:"inherit",border:isActive?`2px solid ${K.night}`:`1px solid #c0b8a8`,background:isActive?K.night:"#f0ece4",color:isActive?K.gold:K.muted}}>{g}</button>);})}
+            </div>
+            <div style={{display:"flex",gap:"6px",alignItems:"center"}}>
+              {(fRank||fSize||fGender||fMeal||fAlcohol||showFavOnly)&&(<button onClick={()=>{setFRank("");setFSize("");setFGender("");setFMeal("");setFAlcohol("");setShowFavOnly(false);}} style={{fontSize:"11px",color:K.accent,background:"none",border:"none",cursor:"pointer",fontFamily:"inherit",fontWeight:700}}>초기화</button>)}
+              <button onClick={()=>setShowFavOnly(!showFavOnly)} style={{background:showFavOnly?K.accent:"none",color:showFavOnly?"#fff":K.muted,border:`1.5px solid ${showFavOnly?K.accent:"#c0b8a8"}`,borderRadius:"20px",padding:"3px 9px",fontSize:"11px",cursor:"pointer",fontFamily:"inherit",fontWeight:600}}>♥</button>
+            </div>
           </div>
-          {Object.entries(REGION_GROUPS).map(([groupName,groupRegions])=>{
-            const groupInList=regionList.filter(r=>groupRegions.includes(r));
-            return(
-              <div key={groupName} style={{marginBottom:"7px"}}>
-                <div style={{display:"flex",alignItems:"center",gap:"7px",marginBottom:"4px"}}>
-                  <div style={{fontSize:"10px",color:K.gold,fontWeight:700,letterSpacing:".06em"}}>{groupName}</div>
-                  <button onClick={()=>{const c=prompt(`${groupName}에 추가할 지역 이름:`);if(c?.trim()) saveExtraRegion(c.trim());}}
-                    style={{fontSize:"10px",color:K.muted,background:"none",border:`1px dashed #c0b8a8`,borderRadius:"20px",padding:"1px 8px",cursor:"pointer",fontFamily:"inherit",fontWeight:600}}>+ 추가</button>
-                </div>
-                {groupInList.length>0&&(
-                  <div style={row}>
-                    {groupInList.map(r=>{
-                      const cnt=restaurants.filter(x=>x.region===r).length;
-                      return(<button key={r} style={regionChip(fRegion===r)} onClick={()=>setFRegion(r)}>{r}{cnt>0?` (${cnt})`:""}</button>);
-                    })}
-                  </div>
-                )}
-              </div>
-            );
-          })}
-          {(()=>{
-            const allGrouped=Object.values(REGION_GROUPS).flat();
-            const others=regionList.filter(r=>!allGrouped.includes(r));
-            if(others.length===0) return null;
-            return(
-              <div style={{marginBottom:"6px"}}>
-                <div style={{display:"flex",alignItems:"center",gap:"7px",marginBottom:"4px"}}>
-                  <div style={{fontSize:"10px",color:K.gold,fontWeight:700,letterSpacing:".06em"}}>기타</div>
-                  <button onClick={()=>{const c=prompt("기타 지역 이름:");if(c?.trim()) saveExtraRegion(c.trim());}}
-                    style={{fontSize:"10px",color:K.muted,background:"none",border:`1px dashed #c0b8a8`,borderRadius:"20px",padding:"1px 8px",cursor:"pointer",fontFamily:"inherit",fontWeight:600}}>+ 추가</button>
-                </div>
-                <div style={row}>
-                  {others.map(r=>{
-                    const cnt=restaurants.filter(x=>x.region===r).length;
-                    return(<button key={r} style={regionChip(fRegion===r)} onClick={()=>setFRegion(r)}>{r}{cnt>0?` (${cnt})`:""}</button>);
-                  })}
-                </div>
-              </div>
-            );
-          })()}
+          {Object.entries(REGION_GROUPS).map(([groupName,groupRegions])=>{const groupInList=regionList.filter(r=>groupRegions.includes(r));const isExpanded=expandedGroups[groupName];const visible=isExpanded?groupInList:groupInList.slice(0,3);const hasMore=groupInList.length>3;return(<div key={groupName} style={{marginBottom:"8px"}}><div style={{display:"flex",alignItems:"center",gap:"6px",flexWrap:"wrap"}}><span style={{fontSize:"10px",fontWeight:800,color:K.gold,letterSpacing:".08em",minWidth:"52px"}}>{groupName}</span>{visible.map(r=>{const cnt=restaurants.filter(x=>x.region===r).length;return(<button key={r} style={regionChip(fRegion===r)} onClick={()=>setFRegion(r)}>{r}{cnt>0?` (${cnt})`:""}</button>);})}{hasMore&&(<button onClick={()=>setExpandedGroups(prev=>({...prev,[groupName]:!prev[groupName]}))} style={{padding:"5px 10px",borderRadius:"6px",fontSize:"11px",fontWeight:700,cursor:"pointer",fontFamily:"inherit",border:`1px dashed #c0b8a8`,background:"#fff",color:K.muted}}>{isExpanded?"접기":`+${groupInList.length-3}더보기`}</button>)}</div></div>);})}
+          {(()=>{const allGrouped=Object.values(REGION_GROUPS).flat();const others=regionList.filter(r=>!allGrouped.includes(r));if(others.length===0) return null;const isExpanded=expandedGroups["기타"];const visible=isExpanded?others:others.slice(0,3);return(<div style={{marginBottom:"8px"}}><div style={{display:"flex",alignItems:"center",gap:"6px",flexWrap:"wrap"}}><span style={{fontSize:"10px",fontWeight:800,color:K.gold,letterSpacing:".08em",minWidth:"52px"}}>기타</span>{visible.map(r=>{const cnt=restaurants.filter(x=>x.region===r).length;return(<button key={r} style={regionChip(fRegion===r)} onClick={()=>setFRegion(r)}>{r}{cnt>0?` (${cnt})`:""}</button>);})}{others.length>3&&(<button onClick={()=>setExpandedGroups(prev=>({...prev,"기타":!prev["기타"]}))} style={{padding:"5px 10px",borderRadius:"6px",fontSize:"11px",fontWeight:700,cursor:"pointer",fontFamily:"inherit",border:`1px dashed #c0b8a8`,background:"#fff",color:K.muted}}>{isExpanded?"접기":`+${others.length-3}더보기`}</button>)}</div></div>);})()}
         </div>
-
-        {/* 2. 식사 시간 */}
+      
+            {/* 2. 식사 시간 */}
         <div style={{marginBottom:"10px"}}>
           <div style={{fontSize:"10px",color:K.muted,letterSpacing:".1em",textTransform:"uppercase",fontWeight:600,marginBottom:"6px"}}>식사 시간</div>
           <div style={{display:"flex",gap:"8px",alignItems:"center"}}>
