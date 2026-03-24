@@ -3,9 +3,9 @@ import { db } from "./supabaseClient";
 
 const PRESET_REGIONS = ["판교","광화문","종로","서대문","여의도","강남역","삼성역","홍대입구","합정역"];
 const REGION_GROUPS = {
-  "강북": ["광화문","종로","서대문","홍대입구","합정역","용산/한남"],
-  "강남": ["강남역","삼성역","여의도"],
-  "경기·인천": ["판교"],
+  "강북": ["광화문","종로","서대문","홍대입구","합정역","용산/한남","여의도","공덕","서촌"],
+  "강남": ["강남역","삼성역","양재"],
+  "경기·인천": ["판교","정자동"],
 };
 const RANKS   = ["임원급 (국장/부국장)","데스크급 (50대+)","일반기자 (20~30대)"];
 const SIZES   = ["1:1 단독","소그룹 (2~4인)","단체 (5인 이상)"];
@@ -26,7 +26,6 @@ const PRICE_STYLE = {
   "5만원 이상": { color:"#8a4200", bg:"#fff2e0", border:"#d4a030" },
 };
 const AMBIANCE_OPTS = ["조용함","비즈니스","프라이빗룸","뷰 맛집","트렌디","전통적","캐주얼","바·하이볼","단체석","주차 편리","야외 테라스"];
-
 const RANK_STYLE = {
   "임원급 (국장/부국장)": { label:"임원급",   dot:"#6a22a0", bg:"#f4eefb" },
   "데스크급 (50대+)":     { label:"데스크",   dot:"#b04a00", bg:"#fff2e6" },
@@ -406,7 +405,6 @@ export default function App() {
         ))}
       </div>
 
-      {/* 필터 패널 */}
       <div style={{background:"#ede9e0",borderBottom:`1px solid ${K.border}`,padding:"12px 14px"}}>
         <input value={fSearch} onChange={e=>setFSearch(e.target.value)} placeholder="🔍  이름, 메모, 음식 종류 검색..." style={{width:"100%",padding:"9px 12px",border:`1.5px solid ${K.border}`,borderRadius:"8px",background:"#fff",fontSize:"14px",fontFamily:"inherit",outline:"none",color:K.ink,boxSizing:"border-box",marginBottom:"10px"}}/>
 
@@ -426,16 +424,21 @@ export default function App() {
           </div>
           {Object.entries(REGION_GROUPS).map(([groupName,groupRegions])=>{
             const groupInList=regionList.filter(r=>groupRegions.includes(r));
-            if(groupInList.length===0) return null;
             return(
-              <div key={groupName} style={{marginBottom:"6px"}}>
-                <div style={{fontSize:"10px",color:K.gold,fontWeight:700,letterSpacing:".06em",marginBottom:"4px"}}>{groupName}</div>
-                <div style={row}>
-                  {groupInList.map(r=>{
-                    const cnt=restaurants.filter(x=>x.region===r).length;
-                    return(<button key={r} style={regionChip(fRegion===r)} onClick={()=>setFRegion(r)}>{r}{cnt>0?` (${cnt})`:""}</button>);
-                  })}
+              <div key={groupName} style={{marginBottom:"7px"}}>
+                <div style={{display:"flex",alignItems:"center",gap:"7px",marginBottom:"4px"}}>
+                  <div style={{fontSize:"10px",color:K.gold,fontWeight:700,letterSpacing:".06em"}}>{groupName}</div>
+                  <button onClick={()=>{const c=prompt(`${groupName}에 추가할 지역 이름:`);if(c?.trim()) saveExtraRegion(c.trim());}}
+                    style={{fontSize:"10px",color:K.muted,background:"none",border:`1px dashed #c0b8a8`,borderRadius:"20px",padding:"1px 8px",cursor:"pointer",fontFamily:"inherit",fontWeight:600}}>+ 추가</button>
                 </div>
+                {groupInList.length>0&&(
+                  <div style={row}>
+                    {groupInList.map(r=>{
+                      const cnt=restaurants.filter(x=>x.region===r).length;
+                      return(<button key={r} style={regionChip(fRegion===r)} onClick={()=>setFRegion(r)}>{r}{cnt>0?` (${cnt})`:""}</button>);
+                    })}
+                  </div>
+                )}
               </div>
             );
           })}
@@ -445,7 +448,11 @@ export default function App() {
             if(others.length===0) return null;
             return(
               <div style={{marginBottom:"6px"}}>
-                <div style={{fontSize:"10px",color:K.gold,fontWeight:700,letterSpacing:".06em",marginBottom:"4px"}}>기타</div>
+                <div style={{display:"flex",alignItems:"center",gap:"7px",marginBottom:"4px"}}>
+                  <div style={{fontSize:"10px",color:K.gold,fontWeight:700,letterSpacing:".06em"}}>기타</div>
+                  <button onClick={()=>{const c=prompt("기타 지역 이름:");if(c?.trim()) saveExtraRegion(c.trim());}}
+                    style={{fontSize:"10px",color:K.muted,background:"none",border:`1px dashed #c0b8a8`,borderRadius:"20px",padding:"1px 8px",cursor:"pointer",fontFamily:"inherit",fontWeight:600}}>+ 추가</button>
+                </div>
                 <div style={row}>
                   {others.map(r=>{
                     const cnt=restaurants.filter(x=>x.region===r).length;
@@ -455,7 +462,6 @@ export default function App() {
               </div>
             );
           })()}
-          <button style={{...regionChip(false),borderStyle:"dashed",marginTop:"2px"}} onClick={()=>{const c=prompt("새 지역 이름:");if(c?.trim()) saveExtraRegion(c.trim());}}>+ 지역 추가</button>
         </div>
 
         {/* 2. 식사 시간 */}
