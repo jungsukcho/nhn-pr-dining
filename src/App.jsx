@@ -80,6 +80,7 @@ export default function App() {
   const [fMeal,    setFMeal]    = useState("");
   const [fAlcohol, setFAlcohol] = useState("");
   const [fSearch,  setFSearch]  = useState("");
+  const [expandedGroups, setExpandedGroups] = useState({});
 
   useEffect(()=>{
     loadAll();
