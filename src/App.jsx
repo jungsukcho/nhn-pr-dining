@@ -401,7 +401,6 @@ export default function App() {
            <div style={{fontSize:"22px",fontWeight:800,color:"#eeeae2",letterSpacing:"-.02em",fontFamily:FF}}>NHN PR 다이닝</div>
             <div style={{fontSize:"10px",color:K.accent,letterSpacing:".16em",textTransform:"uppercase",marginTop:"3px"}}>NHN PR Dining Planner</div>
           </div>
-          <button onClick={()=>openAdd()} style={{background:K.accent,color:"#fff",border:"none",borderRadius:"7px",padding:"9px 14px",fontWeight:700,cursor:"pointer",fontSize:"13px",fontFamily:"inherit"}}>+ 추가</button>
         </div>
       </div>
       <div style={{display:"flex",background:"#fff",borderBottom:`1px solid ${K.border}`}}>
