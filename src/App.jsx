@@ -76,7 +76,7 @@ export default function App() {
   const [fAlcohol, setFAlcohol] = useState("");
   const [fSearch,  setFSearch]  = useState("");
   const [expandedGroups, setExpandedGroups] = useState({});
-
+const [activeGroup, setActiveGroup] = useState("전체");
   useEffect(()=>{
     loadAll();
     const saved = localStorage.getItem("pdp_extra_regions");
