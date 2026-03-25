@@ -96,7 +96,8 @@ export default function App() {
   const pop = (msg, type="ok") => { setToast(msg); setToastType(type); setTimeout(()=>setToast(""), 2500); };
 
   const filtered = restaurants.filter(r=>{
-    if(fRegion!=="전체" && r.region!==fRegion) return false;
+    if(fRegion!=="전체" && !REGION_GROUPS[fRegion] && r.region!==fRegion) return false;
+if(REGION_GROUPS[fRegion] && !REGION_GROUPS[fRegion].includes(r.region)) return false;
     if(fRank    && !r.ranks?.includes(fRank))    return false;
     if(fSize    && !r.sizes?.includes(fSize))    return false;
     if(fGender  && !r.genders?.includes(fGender))return false;
