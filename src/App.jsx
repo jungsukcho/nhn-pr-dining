@@ -337,7 +337,7 @@ export default function App() {
             {showDetailFilter?"▲ 상세조건 닫기":"▼ 상세조건 설정"}
           </button>
         </div>
-        {showDetailFilter&&<>
+        {showDetailFilter&&(
         <div style={{marginBottom:"10px"}}>
           <div style={{fontSize:"10px",color:K.muted,letterSpacing:".1em",textTransform:"uppercase",fontWeight:600,marginBottom:"6px"}}>식사 시간</div>
           <div style={{display:"flex",gap:"6px",alignItems:"center",flexWrap:"wrap"}}>
