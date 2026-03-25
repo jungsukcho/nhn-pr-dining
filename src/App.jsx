@@ -472,7 +472,7 @@ export default function App() {
           </div>
         ))}
       </div>
-      <button onClick={()=>openAdd()} style={{position:"fixed",bottom:"24px",right:"calc(50% - 234px)",background:K.accent,color:"#fff",border:"none",borderRadius:"50px",padding:"13px 22px",fontWeight:800,cursor:"pointer",fontSize:"14px",fontFamily:"inherit",boxShadow:"0 4px 16px rgba(184,40,0,.35)",zIndex:100,letterSpacing:".04em"}}>+ 음식점 추가</button>
+      <button onClick={()=>openAdd()} style={{position:"fixed",bottom:"24px",right:"20px",background:K.accent,color:"#fff",border:"none",borderRadius:"50px",padding:"13px 22px",fontWeight:800,cursor:"pointer",fontSize:"14px",fontFamily:"inherit",boxShadow:"0 4px 16px rgba(184,40,0,.35)",zIndex:100,letterSpacing:".04em"}}>+ 음식점 추가</button>
       <Toast/>
     </div>
   );
