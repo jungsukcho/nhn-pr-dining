@@ -76,6 +76,7 @@ export default function App() {
   const [fAlcohol, setFAlcohol] = useState("");
   const [fSearch,  setFSearch]  = useState("");
   const [expandedGroups, setExpandedGroups] = useState({});
+  const [showDetailFilter, setShowDetailFilter] = useState(false);
   const [activeGroup, setActiveGroup] = useState("전체");
 
   useEffect(()=>{
@@ -332,23 +333,29 @@ export default function App() {
             </div>
           </div>
         </div>
-        <div style={sec}>
-          <label style={fLabel}>식사 시간</label>
-          <div style={{display:"flex",gap:"8px",marginBottom:"14px"}}>{MEAL_TIMES.map(m=>(<button key={m} style={mealBtn(m,form.mealTimes?.includes(m))} onClick={()=>toggleArr("mealTimes",m)}><span style={{fontSize:"16px"}}>{MEAL_STYLE[m].icon}</span> {m}</button>))}</div>
-          {isDinner&&<div style={{background:"#fdf8ee",borderRadius:"10px",padding:"12px",border:`1px dashed ${K.gold}50`,marginBottom:"14px"}}>
-            <label style={{...fLabel,color:K.gold}}>석식 주류 옵션</label>
-            <div style={row}>{ALCOHOL_OPTS.map(a=>(<button key={a} style={alcChip(a,form.alcohols?.includes(a))} onClick={()=>toggleArr("alcohols",a)}>{a}</button>))}</div>
-            <div style={{marginTop:"10px"}}>
-              <label style={{...fLabel,color:K.gold}}>콜키지</label>
-              <div style={{display:"flex",gap:"6px"}}>{CORKAGE_OPTS.map(c=>(<button key={c} onClick={()=>setForm({...form,corkage:form.corkage===c?"":c})} style={{flex:1,padding:"7px 0",borderRadius:"8px",fontSize:"12px",fontWeight:700,fontFamily:"inherit",cursor:"pointer",transition:"all .12s",border:form.corkage===c?`2px solid ${CORKAGE_STYLE[c].color}`:`1px solid ${K.border}`,background:form.corkage===c?CORKAGE_STYLE[c].bg:"#fff",color:form.corkage===c?CORKAGE_STYLE[c].color:K.muted}}>{c==="가능"?"✓ 가능":c==="불가"?"✗ 불가":"△ 조건부"}</button>))}</div>
-            </div>
-          </div>}
-          <label style={fLabel}>상대 직급</label>
-          <div style={{...row,marginBottom:"12px"}}>{RANKS.map(r=>(<button key={r} style={mChip(form.ranks?.includes(r))} onClick={()=>toggleArr("ranks",r)}>{RANK_STYLE[r]?.label||r}</button>))}</div>
-          <label style={fLabel}>미팅 규모</label>
-          <div style={{...row,marginBottom:"12px"}}>{SIZES.map(sz=>(<button key={sz} style={mChip(form.sizes?.includes(sz))} onClick={()=>toggleArr("sizes",sz)}>{sz}</button>))}</div>
-          <label style={fLabel}>성별 구성</label>
-          <div style={row}>{GENDERS.map(g=>(<button key={g} style={mChip(form.genders?.includes(g))} onClick={()=>toggleArr("genders",g)}>{g}</button>))}</div>
+       <button onClick={()=>setShowDetailFilter(!showDetailFilter)} style={{marginTop:"6px",width:"100%",padding:"8px",borderRadius:"8px",border:`1px solid #c0b8a8`,background:showDetailFilter?K.night:"#fff",color:showDetailFilter?"#eeeae2":K.muted,fontSize:"12px",fontWeight:700,cursor:"pointer",fontFamily:"inherit",letterSpacing:".04em"}}>
+            {showDetailFilter?"▲ 상세조건 닫기":"▼ 상세조건 설정"}
+          </button>
+        </div>
+        {showDetailFilter&&<>
+        <div style={{marginBottom:"10px"}}>
+          <div style={{fontSize:"10px",color:K.muted,letterSpacing:".1em",textTransform:"uppercase",fontWeight:600,marginBottom:"6px"}}>식사 시간</div>
+          <div style={{display:"flex",gap:"6px",alignItems:"center",flexWrap:"wrap"}}>
+            {MEAL_TIMES.map(m=>(<button key={m} style={chip(fMeal===m)} onClick={()=>{setFMeal(fMeal===m?"":m);if(fMeal===m)setFAlcohol("");}}>{MEAL_STYLE[m].icon} {m}</button>))}
+            {(fMeal||fAlcohol)&&<button onClick={()=>{setFMeal("");setFAlcohol("");}} style={{padding:"5px 11px",borderRadius:"20px",fontSize:"12px",fontWeight:600,border:`1px solid #c0b8a8`,background:"#fff",color:K.muted,cursor:"pointer",fontFamily:"inherit"}}>✕ 해제</button>}
+          </div>
+        </div>
+        {fMeal==="석식"&&<div style={{background:"#fdf8ee",borderRadius:"10px",padding:"10px 12px",border:`1px dashed ${K.gold}60`,marginBottom:"10px"}}><div style={{fontSize:"10px",color:K.gold,letterSpacing:".1em",textTransform:"uppercase",fontWeight:700,marginBottom:"6px"}}>🍾 주류 종류</div><div style={row}>{ALCOHOL_OPTS.map(a=>(<button key={a} style={alcChip(a,fAlcohol===a)} onClick={()=>setFAlcohol(fAlcohol===a?"":a)}>{a}</button>))}</div></div>}
+        <div style={{marginBottom:"9px"}}>
+          <div style={{fontSize:"10px",color:K.muted,letterSpacing:".1em",textTransform:"uppercase",fontWeight:600,marginBottom:"5px"}}>미팅 상대</div>
+          <div style={row}>{RANKS.map(r=>(<button key={r} style={chip(fRank===r,RANK_STYLE[r]?.dot||K.night)} onClick={()=>setFRank(fRank===r?"":r)}>{RANK_STYLE[r]?.label||r}</button>))}</div>
+        </div>
+        <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:"8px"}}>
+          <div><div style={{fontSize:"10px",color:K.muted,letterSpacing:".1em",textTransform:"uppercase",fontWeight:600,marginBottom:"5px"}}>미팅 규모</div><div style={row}>{SIZES.map(sz=>(<button key={sz} style={chip(fSize===sz)} onClick={()=>setFSize(fSize===sz?"":sz)}>{sz}</button>))}</div></div>
+          <div><div style={{fontSize:"10px",color:K.muted,letterSpacing:".1em",textTransform:"uppercase",fontWeight:600,marginBottom:"5px"}}>성별 구성</div><div style={row}>{GENDERS.map(g=>(<button key={g} style={chip(fGender===g)} onClick={()=>setFGender(fGender===g?"":g)}>{g}</button>))}</div></div>
+        </div>
+        </>}
+      </div>
         </div>
         <div style={sec}>
           <label style={fLabel}>미팅 분위기</label>
