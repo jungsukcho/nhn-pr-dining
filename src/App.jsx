@@ -337,7 +337,7 @@ export default function App() {
             {showDetailFilter?"▲ 상세조건 닫기":"▼ 상세조건 설정"}
           </button>
         </div>
-        {showDetailFilter&&(
+        {showDetailFilter&&<div>
         <div style={{marginBottom:"10px"}}>
           <div style={{fontSize:"10px",color:K.muted,letterSpacing:".1em",textTransform:"uppercase",fontWeight:600,marginBottom:"6px"}}>식사 시간</div>
           <div style={{display:"flex",gap:"6px",alignItems:"center",flexWrap:"wrap"}}>
@@ -354,7 +354,7 @@ export default function App() {
           <div><div style={{fontSize:"10px",color:K.muted,letterSpacing:".1em",textTransform:"uppercase",fontWeight:600,marginBottom:"5px"}}>미팅 규모</div><div style={row}>{SIZES.map(sz=>(<button key={sz} style={chip(fSize===sz)} onClick={()=>setFSize(fSize===sz?"":sz)}>{sz}</button>))}</div></div>
           <div><div style={{fontSize:"10px",color:K.muted,letterSpacing:".1em",textTransform:"uppercase",fontWeight:600,marginBottom:"5px"}}>성별 구성</div><div style={row}>{GENDERS.map(g=>(<button key={g} style={chip(fGender===g)} onClick={()=>setFGender(fGender===g?"":g)}>{g}</button>))}</div></div>
         </div>
-        )}
+       </div>}
       </div>
         </div>
         <div style={sec}>
