@@ -440,7 +440,7 @@ export default function App() {
                 <div style={{display:"flex",alignItems:"center",gap:"6px",flexWrap:"wrap"}}>
                   {activeGroup==="전체"&&<span style={{fontSize:"10px",fontWeight:800,color:K.gold,letterSpacing:".08em",minWidth:"52px"}}>{groupName}</span>}
                   {visible.map(r=>{const cnt=restaurants.filter(x=>x.region===r).length;return(<button key={r} style={regionChip(fRegion===r)} onClick={()=>setFRegion(fRegion===r?"전체":r)}>{r}{cnt>0?` (${cnt})`:""}</button>);})}
-                  {hasMore&&(<button onClick={()=>setExpandedGroups(prev=>({...prev,[groupName]:!prev[groupName]}))} style={{padding:"5px 10px",borderRadius:"6px",fontSize:"11px",fontWeight:700,cursor:"pointer",fontFamily:"inherit",border:`1px dashed #c0b8a8`,background:"#fff",color:K.muted}}>{isExpanded?"접기":`+${groupInList.length-3}더보기`}</button>)}
+                  {hasMore&&(<button onClick={()=>setExpandedGroups(prev=>({...prev,[groupName]:!prev[groupName]}))} style={{padding:"5px 10px",borderRadius:"6px",fontSize:"11px",fontWeight:700,cursor:"pointer",fontFamily:"inherit",border:`1px dashed #c0b8a8`,background:"#fff",color:K.muted}}>{isExpanded?"접기":`+${groupInList.length-4}더보기`}</button>)}
                 </div>
               </div>
             );
