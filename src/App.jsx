@@ -189,11 +189,15 @@ export default function App() {
     setForm({...form,[field]:arr.includes(val)?arr.filter(x=>x!==val):[...arr,val]});
   };
 
-  const saveExtraRegion = (name) => {
-    if(!name?.trim()||allRegions.includes(name.trim())) return;
-    const up=[...extraRegions,name.trim()];
-    setExtraRegions(up); localStorage.setItem("pdp_extra_regions",JSON.stringify(up));
-  };
+  const saveExtraRegion = (name, group) => {
+  if(!name?.trim()) return;
+  const up=[...extraRegions,name.trim()];
+  setExtraRegions(up);
+  localStorage.setItem("pdp_extra_regions",JSON.stringify(up));
+  if(group && REGION_GROUPS[group] && !REGION_GROUPS[group].includes(name.trim())) {
+    REGION_GROUPS[group] = [...REGION_GROUPS[group], name.trim()];
+  }
+};
 
   const K = { ink:"#12100e",paper:"#f6f2eb",card:"#fff",muted:"#8a7e6e",accent:"#b82800",gold:"#b87a00",night:"#1a1e3a",border:"#ddd4c4" };
   const FF = "Pretendard,'Apple SD Gothic Neo','Noto Sans KR',sans-serif";
