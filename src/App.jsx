@@ -327,7 +327,14 @@ export default function App() {
           <label style={fLabel}>지역 *</label>
           <div style={{...row,marginBottom:"8px"}}>
             {regionList.map(r=>(<button key={r} style={mChip(form.region===r)} onClick={()=>setForm({...form,region:r})}>{r}</button>))}
-            <button style={{...mChip(false),borderStyle:"dashed"}} onClick={()=>{const c=prompt("새 지역 이름:");if(c?.trim()){setForm({...form,region:c.trim()});saveExtraRegion(c.trim());}}}>+ 직접 입력</button>
+            <button style={{...mChip(false),borderStyle:"dashed"}} onClick={()=>{
+  const group=prompt("어느 지역 그룹에 추가할까요?\n1. 강북\n2. 강남\n3. 경기·인천\n\n번호를 입력하세요:");
+  const groupMap={"1":"강북","2":"강남","3":"경기·인천"};
+  const selectedGroup=groupMap[group?.trim()];
+  if(!selectedGroup) return;
+  const c=prompt(`${selectedGroup}에 추가할 새 지역 이름:`);
+  if(c?.trim()){setForm({...form,region:c.trim()});saveExtraRegion(c.trim(),selectedGroup);}
+}}>+ 직접 입력</button>
           </div>
           <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:"8px"}}>
             <div><label style={fLabel}>음식 종류</label><select style={{...fInput,marginBottom:0}} value={form.cuisine} onChange={e=>setForm({...form,cuisine:e.target.value})}><option value="">선택</option>{CUISINES.map(c=><option key={c}>{c}</option>)}</select></div>
