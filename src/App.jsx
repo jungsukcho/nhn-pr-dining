@@ -268,7 +268,7 @@ export default function App() {
             <button onClick={()=>openVisitModal(r.id)} style={{background:K.night,color:K.gold,border:"none",borderRadius:"7px",padding:"7px 13px",fontSize:"12px",fontWeight:700,cursor:"pointer",fontFamily:"inherit"}}>+ 방문 기록 추가</button>
           </div>
           {(!r.visitLogs||r.visitLogs.length===0)?<div style={{padding:"20px 15px 22px",textAlign:"center",color:K.muted,fontSize:"13px"}}>아직 방문 기록이 없습니다</div>:(
-            <>{(showAllLogs?r.visitLogs:r.visitLogs.slice(0,4)).map((log,i)=>(
+            <>{(showAllLogs?r.visitLogs:r.visitLogs.slice(0,3)).map((log,i)=>(
               <div key={log.ts||i} style={{padding:"11px 15px",borderTop:`1px solid ${K.border}`,background:i%2===0?"#fff":"#fdfaf5"}}>
                 <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start",marginBottom:"5px"}}>
                   <div style={{display:"flex",alignItems:"center",gap:"8px"}}>
@@ -433,14 +433,14 @@ export default function App() {
           {Object.entries(REGION_GROUPS).filter(([g])=>activeGroup==="전체"||activeGroup===g).map(([groupName,groupRegions])=>{
             const groupInList=regionList.filter(r=>groupRegions.includes(r));
             const isExpanded=expandedGroups[groupName];
-            const visible=isExpanded?groupInList:groupInList.slice(0,4);
+            const visible=isExpanded?groupInList:groupInList.slice(0,3);
             const hasMore=groupInList.length>3;
             return(
               <div key={groupName} style={{marginBottom:"6px"}}>
                 <div style={{display:"flex",alignItems:"center",gap:"6px",flexWrap:"wrap"}}>
                   {activeGroup==="전체"&&<span style={{fontSize:"10px",fontWeight:800,color:K.gold,letterSpacing:".08em",minWidth:"52px"}}>{groupName}</span>}
                   {visible.map(r=>{const cnt=restaurants.filter(x=>x.region===r).length;return(<button key={r} style={regionChip(fRegion===r)} onClick={()=>setFRegion(fRegion===r?"전체":r)}>{r}{cnt>0?` (${cnt})`:""}</button>);})}
-                  {hasMore&&(<button onClick={()=>setExpandedGroups(prev=>({...prev,[groupName]:!prev[groupName]}))} style={{padding:"5px 10px",borderRadius:"6px",fontSize:"11px",fontWeight:700,cursor:"pointer",fontFamily:"inherit",border:`1px dashed #c0b8a8`,background:"#fff",color:K.muted}}>{isExpanded?"접기":`+${groupInList.length-4}더보기`}</button>)}
+                  {hasMore&&(<button onClick={()=>setExpandedGroups(prev=>({...prev,[groupName]:!prev[groupName]}))} style={{padding:"5px 10px",borderRadius:"6px",fontSize:"11px",fontWeight:700,cursor:"pointer",fontFamily:"inherit",border:`1px dashed #c0b8a8`,background:"#fff",color:K.muted}}>{isExpanded?"접기":`+${groupInList.length-3}더보기`}</button>)}
                 </div>
               </div>
             );
@@ -502,7 +502,7 @@ export default function App() {
             <div style={{padding:"0 13px 10px",display:"flex",gap:"4px",flexWrap:"wrap"}}>
               {r.ranks?.map(rk=>(<Tag key={rk} label={RANK_STYLE[rk]?.label||rk} bg={RANK_STYLE[rk]?.bg||"#eee"} color={RANK_STYLE[rk]?.dot||"#444"} border={RANK_STYLE[rk]?.dot+"40"} small/>))}
               {r.sizes?.map(sz=><Tag key={sz} label={sz} small/>)}
-              {r.ambiance?.slice(0,4).map(a=><Tag key={a} label={a} bg="#ede9e0" color="#6a5e4e" small/>)}
+              {r.ambiance?.slice(0,3).map(a=><Tag key={a} label={a} bg="#ede9e0" color="#6a5e4e" small/>)}
             </div>
             {r.visitLogs?.length>0&&r.visitLogs[0].comment&&<div style={{padding:"0 13px 8px"}}><div style={{fontSize:"12px",color:K.muted,background:"#faf7f2",padding:"6px 10px",borderRadius:"7px",lineHeight:1.5,borderLeft:`2px solid ${K.gold}`,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}><span style={{fontSize:"11px",color:K.gold,fontWeight:700,marginRight:"5px"}}>{r.visitLogs[0].date}</span>{r.visitLogs[0].comment}</div></div>}
             <div style={{padding:"7px 13px",background:"#faf7f2",borderTop:`1px solid ${K.border}`,display:"flex",justifyContent:"space-between",alignItems:"center"}}>
