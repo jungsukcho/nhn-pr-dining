@@ -57,7 +57,7 @@ export const db = {
     const { data, error } = await supabase
       .from('restaurants')
       .select('*')
-      .order('created_at', { ascending: true })
+      .order('created_at', { ascending: false })
     if (error) throw error
     return data.map(fromRow)
   },
