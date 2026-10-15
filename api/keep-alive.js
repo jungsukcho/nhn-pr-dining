@@ -7,8 +7,8 @@ export default async function handler(req, res) {
     return res.status(401).send('Unauthorized')
   }
 
-  const url = process.env.VITE_SUPABASE_URL || process.env.SUPABASE_URL
-  const key = process.env.VITE_SUPABASE_ANON_KEY || process.env.SUPABASE_ANON_KEY
+  const url = process.env.VITE_SUPABASE_URL
+const key = process.env.VITE_SUPABASE_KEY
 
   if (!url || !key) {
     return res.status(500).json({ ok: false, error: 'Missing Supabase env vars' })
